@@ -1,0 +1,33 @@
+    
+
+<Opcao>
+
+<Menu>
+    name:'menu'
+    FloatLayout:
+        id: palco
+        MDFillRoundFlatButton:
+            size_hint_x: .8
+            pos_hint: {"center_x": .5, "center_y": .5}
+            text: "Fase anterior"
+            
+
+            on_release:
+                app.proxima_fase()
+        MDFillRoundFlatButton:
+            size_hint_x: .8
+            pos_hint: {"center_x": .5, "center_y": .3}
+            text: "Próximo fase"
+            on_release:
+                app.proxima_fase()
+
+
+<Inicial>
+    name:'inicial'
+    BoxLayout:
+        Button:
+            text: "Que coisa não?"
+        Button:
+            text: "Que coisa não?"
+            on_release:
+                app.anterior_fase()
