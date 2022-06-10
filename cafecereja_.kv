@@ -1,19 +1,26 @@
-    
-
 <Opcao>
 
+    Menu:
+        name:'menu'
+    Inicial:
+        name:'inicial'
+
 <Menu>
-    name:'menu'
+    
     FloatLayout:
-        id: palco
+        MDLabel:
+            text: "Café Cereja"
+            halign: "center"
+            theme_text_color: "Secondary"
+            pos_hint: {"center_x": .5, "center_y": .7}
+            
         MDFillRoundFlatButton:
             size_hint_x: .8
             pos_hint: {"center_x": .5, "center_y": .5}
-            text: "Fase anterior"
-            
-
+            text: "Gerar mapa"
             on_release:
-                app.proxima_fase()
+                app.root.current = 'inicial'
+
         MDFillRoundFlatButton:
             size_hint_x: .8
             pos_hint: {"center_x": .5, "center_y": .3}
@@ -21,13 +28,23 @@
             on_release:
                 app.proxima_fase()
 
-
 <Inicial>
-    name:'inicial'
     BoxLayout:
-        Button:
-            text: "Que coisa não?"
-        Button:
-            text: "Que coisa não?"
-            on_release:
-                app.anterior_fase()
+        orientation:'vertical'
+
+        MDToolbar:
+            title: "MDTopAppBar"
+
+        FloatLayout:
+            Widget:
+                canvas:
+                    Color:
+                        rgba: 0, .5, .5, 1
+                    Rectangle:
+                        size: 50,50
+                        pos: 50,50
+                    Rectangle:
+                        size: 50,50
+                        pos: 150,150
+
+
