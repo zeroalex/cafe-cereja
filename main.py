@@ -12,6 +12,15 @@ from kivymd.uix.button import MDFillRoundFlatButton
 from kivy.graphics import Rectangle
 from kivy.graphics import Color
 
+#from openpyxl import load_workbook
+
+import csv
+
+with open('data/dados.csv','r', encoding="ISO-8859-1") as f:
+    reader = csv.reader(f)
+    for x in reader:
+        print(x[0])
+
 
 
 class Inicial(Screen):
@@ -33,6 +42,16 @@ class CafeCereja_App(MDApp):
         self.theme_cls.primary_palette = "Purple" #, "Red"
         self.theme_cls.primary_hue = "800"  # "500"
         
+        """
+        data_file= 'data/dados.csv'
+
+        ws = load_workbook(data_file)
+
+        all_rows = list(xs.rows)
+
+        for x in all_rows:
+            print(x.value)
+        """
 
 
 
