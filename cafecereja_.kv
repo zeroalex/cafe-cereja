@@ -4,12 +4,13 @@
         name:'menu'
     Inicial:
         name:'inicial'
+        
 
 <Menu>
     
     FloatLayout:
         MDLabel:
-            text: "Café Cereja"
+            text: app.lista_bancas[0][0]
             halign: "center"
             theme_text_color: "Secondary"
             pos_hint: {"center_x": .5, "center_y": .7}
@@ -32,19 +33,42 @@
     BoxLayout:
         orientation:'vertical'
 
+ 
         MDToolbar:
-            title: "MDTopAppBar"
+            size_hint_y: .1
+            title: "Mapa Do Varejão Noturno"
+    
+        BoxLayout:
+            orientation:'horizontal'
+    
+            
+            Lista_empresas:
 
-        FloatLayout:
-            Widget:
-                canvas:
-                    Color:
-                        rgba: 0, .5, .5, 1
-                    Rectangle:
-                        size: 50,50
-                        pos: 50,50
-                    Rectangle:
-                        size: 50,50
-                        pos: 150,150
 
+            FloatLayout:
+                MDLabel:
+                    text: app.lista_bancas[0][0]
+                    halign: "center"
+                    theme_text_color: "Secondary"
+                    pos_hint: {"center_x": .5, "center_y": .7}
+
+                Tela_canvas:
+                
+            
+
+
+<Tela_canvas2>
+    Widget:
+        id: "tela_canvas"
+        canvas:
+            Color:
+                rgba:0,1,0,1
+            Rectangle:
+                size: 50,50
+                pos: 50,50
+
+    
+<Lista_empresas>
+    pos_hint: {"center_x": .1, "center_y": .9}  
+      
 
