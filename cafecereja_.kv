@@ -1,35 +1,83 @@
+#construção das telas
+
+#inicial chamando o sceenmanager e as screens
 <Opcao>
 
     Menu:
         name:'menu'
-    Inicial:
-        name:'inicial'
-        
+    Tela_Mapa:
+        name:'mapa'
+    Carregar:
+        name:'carregar' 
+    Busca:
+        name:'busca'  
+ 
+    
 
+#screen de boas vindas
 <Menu>
     
     FloatLayout:
         MDLabel:
-            text: app.lista_bancas[0][0]
+            text: "Cafe Cereja"
+            halign: "center"
+            theme_text_color: "Primary"
+            pos_hint: {"center_x": .5, "center_y": .8}
+        MDLabel:
+            text: "Bem vindo"
             halign: "center"
             theme_text_color: "Secondary"
-            pos_hint: {"center_x": .5, "center_y": .7}
+            pos_hint: {"center_x": .5, "center_y": .75}
+           
+        MDFillRoundFlatButton:
             
-        MDFillRoundFlatButton:
-            size_hint_x: .8
             pos_hint: {"center_x": .5, "center_y": .5}
-            text: "Gerar mapa"
+            text: "Ver mapa"
+            on_release: app.root.transition.direction = 'left'
             on_release:
-                app.root.current = 'inicial'
+                app.root.current = 'mapa'
 
         MDFillRoundFlatButton:
-            size_hint_x: .8
             pos_hint: {"center_x": .5, "center_y": .3}
-            text: "Próximo fase"
+            text: "Carregar listas"
+            on_release: app.root.transition.direction = 'up'
             on_release:
-                app.proxima_fase()
+                app.root.current = 'carregar'
 
-<Inicial>
+
+
+#screen para carregar um novo csv
+<Carregar>
+    
+    FloatLayout:
+        MDLabel:
+            text: "Carregar novo"
+            halign: "center"
+            theme_text_color: "Primary"
+            pos_hint: {"center_x": .5, "center_y": .8}
+        MDLabel:
+            text: "cole o endereço abaixo"
+            halign: "center"
+            theme_text_color: "Secondary"
+            pos_hint: {"center_x": .5, "center_y": .75}
+
+        MDRoundFlatIconButton:
+            text: "Open manager"
+            icon: "folder"
+            pos_hint: {'center_x': .5, 'center_y': .6}
+            on_release: root.file_manager_open()
+
+        MDFillRoundFlatButton:
+            pos_hint: {"center_x": .5, "center_y": .3}
+            text: "Atualizar lista"
+            on_release: app.root.transition.direction = 'down'
+            on_release: app.root.current = 'menu'
+            on_release: root.atualizar()
+
+
+# Screen do mapa
+<Tela_Mapa>
+    #clksmldkml
     BoxLayout:
         orientation:'vertical'
 
@@ -37,26 +85,78 @@
         MDToolbar:
             size_hint_y: .1
             title: "Mapa Do Varejão Noturno"
+            left_action_items: [["arrow-left", lambda x: app.root.menu_carregar()]]
+            right_action_items: [["menu", lambda x: app.root.busca_carregar()]]
     
         BoxLayout:
             orientation:'horizontal'
     
             
-            Lista_empresas:
-
-
-            FloatLayout:
-                MDLabel:
-                    text: app.lista_bancas[0][0]
-                    halign: "center"
-                    theme_text_color: "Secondary"
-                    pos_hint: {"center_x": .5, "center_y": .7}
-
-                Tela_canvas:
-                
             
 
 
+            FloatLayout:
+                
+                Tela_canvas:
+                
+# Screen da busca
+<Busca>
+    BoxLayout:
+        orientation:'vertical'
+
+        MDToolbar:
+            size_hint_y: .1
+
+            title: "Empresas"
+            left_action_items: [["arrow-up", lambda x: app.root.voltar_mapa()]]
+            
+        BoxLayout:
+            size_hint_y: .1
+            size_hint_x: .8
+            pos_hint: {"center_x": .5, "center_y": .1}
+            MDTextFieldRect:
+                id:entrada_busca
+                size_hint_y: .8
+                hint_text: "Buscar"
+                mode: "fill"
+                
+                    
+            MDRectangleFlatButton:
+                text:'Buscar'
+                md_bg_color: app.theme_cls.primary_color
+                
+                size_hint_y: .8
+                on_release: app.root.buscar(entrada_busca.text)
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            size_hint_y: .6
+            Lista_empresas:
+                pos_hint: {"center_x": .5, "center_y": .3}
+                            
+        MDToolbar:
+            size_hint_y: .1
+
+            title: "Mapa Do Varejão Noturno"
+        
+
+        
+
+
+
+
+
+#Lista_empresas:
+#usar trecho acima para listar as empresas
+
+
+
+
+
+
+#trechos usados para construir as telas 
+
+#tela do mapa
 <Tela_canvas2>
     Widget:
         id: "tela_canvas"
@@ -67,7 +167,8 @@
                 size: 50,50
                 pos: 50,50
 
-    
+
+#tela da busca
 <Lista_empresas>
     pos_hint: {"center_x": .1, "center_y": .9}  
       
