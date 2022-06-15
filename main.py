@@ -12,12 +12,20 @@ from kivymd.uix.button import MDFillRoundFlatButton
 from kivy.graphics import Rectangle
 from kivy.graphics import Color
 
+from kivy.uix.scrollview import ScrollView
 
 from kivy.core.window import Window
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.toast import toast
+from donaclotilde.model import Model
+
+
 
 import csv
+
+
+
+
 
 
 #trecho deve ser apagado ao implementar banco de dados
@@ -61,7 +69,6 @@ class Tela_canvas(Widget):
 
 class Tela_Mapa(Screen):
 
-
     pass 
 
 class Carregar(Screen):
@@ -73,7 +80,7 @@ class Carregar(Screen):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=self.select_path,
-            preview=True,
+            preview=False,
         )
     
 
@@ -102,7 +109,7 @@ class Carregar(Screen):
         return True
     def atualizar(self):
 
-        with open(self.path+"/dados.csv" ,'r', encoding="ISO-8859-1") as f:
+        with open(self.path,'r', encoding="ISO-8859-1") as f:
             reader = csv.reader(f)
 
             
@@ -121,11 +128,19 @@ class Busca(Screen):
 class Opcao(ScreenManager):
     def __init__(self, **kwargs):
         super(Opcao, self).__init__(**kwargs)
-        self.dados = []
+        
+
+        self.mad = Model()
+        self.lista = Lista_empresas()
+        
     
     def buscar(self, entrada):
-        print('asdas')
-        print(entrada)
+
+        self.lista.inserir_empresas()
+        self.dados = self.mad.lista_limite(0)
+        
+        for x in self.dados:
+            print(x[14])
         
     def menu_carregar(self):
         self.transition.direction = 'right'
@@ -137,14 +152,31 @@ class Opcao(ScreenManager):
         self.transition.direction = 'down'
         self.current="mapa"
 
+class Scroll_lista_empresas(ScrollView):
+    def __init__(self, **kwargs):
+        super(Scroll_lista_empresas, self).__init__(**kwargs)
+        
+        self.s = Lista_empresas()
+
+        self.s.inserir_empresas()
+        self.s.inserir_empresas()
+        self.add_widget(self.s)
+        
+    def carregar_mais(self):
+        print("asd")
+    pass
+
+
     
 class Lista_empresas(MDList):
     def __init__(self, **kwargs):
         super(Lista_empresas, self).__init__(**kwargs)
-        cont= 0 
+        self.inserir_empresas()
 
+    def inserir_empresas(self):
+
+        cont= 0 
         while cont < 10:
-            
             self.add_widget(OneLineListItem(text=f"Empresa: {lista[cont][14]}"))
             cont = cont + 1
 

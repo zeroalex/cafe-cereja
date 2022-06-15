@@ -56,7 +56,7 @@
             theme_text_color: "Primary"
             pos_hint: {"center_x": .5, "center_y": .8}
         MDLabel:
-            text: "cole o endereço abaixo"
+            text: "Escolha a pasta com o arquivo csv"
             halign: "center"
             theme_text_color: "Secondary"
             pos_hint: {"center_x": .5, "center_y": .75}
@@ -127,27 +127,15 @@
                 
                 size_hint_y: .8
                 on_release: app.root.buscar(entrada_busca.text)
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-            size_hint_y: .6
-            Lista_empresas:
-                pos_hint: {"center_x": .5, "center_y": .3}
+
+
+        Scroll_lista_empresas:
                             
-        MDToolbar:
-            size_hint_y: .1
-
-            title: "Mapa Do Varejão Noturno"
         
 
         
 
 
-
-
-
-#Lista_empresas:
-#usar trecho acima para listar as empresas
 
 
 
@@ -157,18 +145,11 @@
 #trechos usados para construir as telas 
 
 #tela do mapa
-<Tela_canvas2>
-    Widget:
-        id: "tela_canvas"
-        canvas:
-            Color:
-                rgba:0,1,0,1
-            Rectangle:
-                size: 50,50
-                pos: 50,50
 
 
 #tela da busca
+<Scroll_lista_empresas>
+
 <Lista_empresas>
     pos_hint: {"center_x": .1, "center_y": .9}  
       
