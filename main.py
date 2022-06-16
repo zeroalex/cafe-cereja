@@ -4,7 +4,7 @@ from kivy.uix.widget import Widget
 from kivy.lang import Builder
 
 from kivymd.app import MDApp
-from kivymd.uix.list import OneLineListItem, MDList
+from kivymd.uix.list import TwoLineAvatarListItem, OneLineListItem, MDList
 from kivymd.uix.screen import Screen 
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFillRoundFlatButton
@@ -149,22 +149,14 @@ class Busca(Screen):
         super(Busca, self).__init__(**kwargs)
         self.mad = Model()
     
-    def carregar(self,root):
-        
-        root.add_widget(OneLineListItem(text="Empresa: "))
-        print(root)
+    def carregar(self,root,busca):
 
-    def buscar(self, entrada):
-        print(entrada)
-        self.lista = self.mad.list_all()
-
-        #self.lista.inserir_empresas()
-        self.dados = self.mad.lista_limite(0)
+        self.dados = self.mad.lista_empresas_filt(busca)
         
         for x in self.dados:
-            print(x[14])
-
-    pass 
+            root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
+                secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2])))
+     
 
 
 

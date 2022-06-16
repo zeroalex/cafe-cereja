@@ -105,7 +105,21 @@ class Model(Donaclotilde):
 		sql = self.get()
 		data = self.result_list(sql)
 		return data
+	def lista_empresas_filt(self, busca=None):
 
+		self.select('nome_permissionario')
+		self.select('ilha_coluna')
+		self.select('banca_numero')
+
+		
+		self.from_table("dados")
+
+		if busca:
+			self.where(busca,"nome_permissionario")
+
+		sql = self.get()
+		data = self.result_list(sql)
+		return data
 
 
 
