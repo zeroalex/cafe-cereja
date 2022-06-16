@@ -1,23 +1,24 @@
-from kivy.uix.screenmanager import ScreenManager
-from kivy.uix.scrollview import ScrollView
-from kivy.uix.widget import Widget
-from kivy.lang import Builder
+from donaclotilde.model import Model
 
-from kivymd.app import MDApp
-from kivymd.uix.list import TwoLineAvatarListItem, OneLineListItem, MDList
-from kivymd.uix.screen import Screen 
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDFillRoundFlatButton
 
+from kivy.core.window import Window
 from kivy.graphics import Rectangle
 from kivy.graphics import Color
 
-from kivy.uix.scrollview import ScrollView
+from kivy.lang import Builder
 
-from kivy.core.window import Window
-from kivymd.uix.filemanager import MDFileManager
+from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.widget import Widget
+
+from kivymd.app import MDApp
 from kivymd.toast import toast
-from donaclotilde.model import Model
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.button import MDFillRoundFlatButton
+from kivymd.uix.filemanager import MDFileManager
+from kivymd.uix.list import TwoLineAvatarListItem, OneLineListItem, MDList
+from kivymd.uix.screen import Screen 
+
 
 
 
@@ -32,9 +33,7 @@ class Opcao(ScreenManager):
 
         self.mad = Model()
         
-    
-    
-        
+            
     def menu_carregar(self):
         self.transition.direction = 'right'
         self.current="menu"
@@ -48,33 +47,31 @@ class Opcao(ScreenManager):
 
 
 
-
-        
-    
-    
-
-
-
 class Tela_canvas(Widget):
     def __init__(self, **kwargs):
         super(Tela_canvas, self).__init__(**kwargs)
 
         mad = Model()
-        self.lista = mad.list_all()
+        self.lista = mad.listar_cordenadas()
 
-        #print(dado[4]+dado[6]+dado[7]+dado[11]+dado[14])
-        
         with self.canvas:
-            for x in self.lista:
-                
-                if x[7]!='banca_numero':
-                    
-                    if x[11] == "Liberada":
-                        Color(0,0,1,1 , mode='rgba')
-                    else:
-                        Color(1,0,0,1 , mode='rgba')
-                    
-                    self.rect = Rectangle(pos = (int(x[7]),int(x[7])), size=(10,10) )
+
+            #padronizar para usar as coordenadas corretas em qualquer tela
+            #desenhar asreas do varejão
+            #Color(0,1,1,1 , mode='rgba')
+            #self.rect = Rectangle(pos=(0,0),size=( 400 ,510))
+
+
+            Color(0,0,1,0.5 , mode='rgba')
+            for x in self.lista:    
+                self.rect = Rectangle(pos = (10 if x[1] == None  else x[1] 
+                    ,10 if x[2] == None else x[2] ), size=(10,10) )
+
+    def on_touch_down(self, touch):
+        
+        print(int(touch.pos[0]))
+        print(int(touch.pos[1]))
+
     def buscar(self):
         print("asdasdasdasd")
         
@@ -98,6 +95,8 @@ class Carregar(Screen):
             select_path=self.select_path,
             preview=False,
         )
+        self.mad=Model()
+
     
 
     def file_manager_open(self):
@@ -123,17 +122,34 @@ class Carregar(Screen):
             if self.manager_open:
                 self.file_manager.back()
         return True
+
     def atualizar(self):
+        if self.path == '':
+            toast("selecione o arquivo csv")
+        else:
+            with open(self.path,'r', encoding="ISO-8859-1") as f:
+                reader = csv.reader(f)
 
-        with open(self.path,'r', encoding="ISO-8859-1") as f:
-            reader = csv.reader(f)
+                
+                lista=[''.join(x).split(';') for x in reader]
+                n = 0
+                print(len(lista))
+                
+                #terminar ainda não funciona
 
-            
-            lista=[''.join(x).split(';') for x in reader]
-            
-        #mudar para atualizar banco de dados
-        print(lista)
+                for x in lista:
+                    asd = self.mad.consulta(x[6],x[7],x[4])
+                    if asd == []:
+                        asd = ['nome_permissionario']
+                    if asd[0] == x[14]:
+                        pass
+                    else:
+                        n = n +1
+                        print(asd[0])
+                        print("lista "+str(x[14]))
 
+            toast("total de atualizações: " + str(n))    
+        
     
     pass 
 class Menu(Screen):
@@ -165,14 +181,7 @@ class Busca(Screen):
 
 
 class Scroll_lista_empresas(ScrollView):
-    def __init__(self, **kwargs):
-        super(Scroll_lista_empresas, self).__init__(**kwargs)
-        self.asd="asdasd"
-
-        
-    def carregar_mais(self):
-        
-        print("asd")
+    
     pass
 
 

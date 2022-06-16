@@ -70,9 +70,16 @@
         MDFillRoundFlatButton:
             pos_hint: {"center_x": .5, "center_y": .3}
             text: "Atualizar lista"
+            on_release: root.atualizar()
+
+        MDFloatingActionButton:
+
+            icon:'check'
+            pos_hint: {"center_x": .5, "center_y": .2}
+            
             on_release: app.root.transition.direction = 'down'
             on_release: app.root.current = 'menu'
-            on_release: root.atualizar()
+            
 
 
 # Screen do mapa
@@ -95,6 +102,8 @@
             FloatLayout:
                 
                 Tela_canvas:
+                    size_hint_x: .5
+
                 
 # Screen da busca
 <Busca>

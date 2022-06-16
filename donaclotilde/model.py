@@ -120,7 +120,31 @@ class Model(Donaclotilde):
 		sql = self.get()
 		data = self.result_list(sql)
 		return data
+	def consulta(self,ilha,banca,area):
 
+		self.select('nome_permissionario')
+		self.from_table("dados")
+		self.where(ilha,"ilha_coluna")
+		self.where_combining("AND")
+		self.where(banca,"banca_numero")
+		self.where_combining("AND")
+		self.where(banca,"area_banca")
+
+		sql = self.get()
+		data = self.result_list(sql)
+		return data
+	
+	def listar_cordenadas(self):
+
+		self.select('nome_permissionario')
+		self.select('cordenada_x')
+		self.select('cordenada_y')
+		
+		self.from_table("dados")
+		
+		sql = self.get()
+		data = self.result_list(sql)
+		return data
 
 
 	def list_filter(self,search=None, coluna=None):
