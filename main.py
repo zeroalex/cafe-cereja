@@ -25,31 +25,45 @@ import csv
 
 
 
+class Opcao(ScreenManager):
+    def __init__(self, **kwargs):
+        super(Opcao, self).__init__(**kwargs)
+        
+
+        self.mad = Model()
+        
+    
+    
+        
+    def menu_carregar(self):
+        self.transition.direction = 'right'
+        self.current="menu"
+    def busca_carregar(self):
+        self.transition.direction = 'up'
+        self.current="busca"
+    def voltar_mapa(self):
+        self.transition.direction = 'down'
+        self.current="mapa"    
 
 
 
-#trecho deve ser apagado ao implementar banco de dados
-with open("data/dados.csv" ,'r', encoding="ISO-8859-1") as f:
-    reader = csv.reader(f)
-
-            
-    lista=[''.join(x).split(';') for x in reader]
 
 
         
     
-    #print(dado[4]+dado[6]+dado[7]+dado[11]+dado[14])
     
+
+
 
 class Tela_canvas(Widget):
     def __init__(self, **kwargs):
         super(Tela_canvas, self).__init__(**kwargs)
 
-        #introduzir banco de dados
-        #self.lista = madruguinha.carregar_empresas()
+        mad = Model()
+        self.lista = mad.list_all()
 
-        #apagar trecho abaixo
-        self.lista = lista
+        #print(dado[4]+dado[6]+dado[7]+dado[11]+dado[14])
+        
         with self.canvas:
             for x in self.lista:
                 
@@ -70,6 +84,8 @@ class Tela_canvas(Widget):
 class Tela_Mapa(Screen):
 
     pass 
+
+
 
 class Carregar(Screen):
     def __init__(self, **kwargs):
@@ -122,63 +138,53 @@ class Carregar(Screen):
     pass 
 class Menu(Screen):
     pass 
+
+
+
+
+
+
 class Busca(Screen):
-
-    pass 
-class Opcao(ScreenManager):
     def __init__(self, **kwargs):
-        super(Opcao, self).__init__(**kwargs)
-        
-
+        super(Busca, self).__init__(**kwargs)
         self.mad = Model()
-        self.lista = Lista_empresas()
-        
     
-    def buscar(self, entrada):
+    def carregar(self,root):
+        
+        root.add_widget(OneLineListItem(text="Empresa: "))
+        print(root)
 
-        self.lista.inserir_empresas()
+    def buscar(self, entrada):
+        print(entrada)
+        self.lista = self.mad.list_all()
+
+        #self.lista.inserir_empresas()
         self.dados = self.mad.lista_limite(0)
         
         for x in self.dados:
             print(x[14])
-        
-    def menu_carregar(self):
-        self.transition.direction = 'right'
-        self.current="menu"
-    def busca_carregar(self):
-        self.transition.direction = 'up'
-        self.current="busca"
-    def voltar_mapa(self):
-        self.transition.direction = 'down'
-        self.current="mapa"
+
+    pass 
+
+
+
+
+
+
 
 class Scroll_lista_empresas(ScrollView):
     def __init__(self, **kwargs):
         super(Scroll_lista_empresas, self).__init__(**kwargs)
-        
-        self.s = Lista_empresas()
+        self.asd="asdasd"
 
-        self.s.inserir_empresas()
-        self.s.inserir_empresas()
-        self.add_widget(self.s)
         
     def carregar_mais(self):
+        
         print("asd")
     pass
 
 
-    
-class Lista_empresas(MDList):
-    def __init__(self, **kwargs):
-        super(Lista_empresas, self).__init__(**kwargs)
-        self.inserir_empresas()
 
-    def inserir_empresas(self):
-
-        cont= 0 
-        while cont < 10:
-            self.add_widget(OneLineListItem(text=f"Empresa: {lista[cont][14]}"))
-            cont = cont + 1
 
 
 class CafeCereja_App(MDApp):
