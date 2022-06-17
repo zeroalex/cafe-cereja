@@ -86,6 +86,30 @@ class Model(Donaclotilde):
 		#print(sql)
 		self.insert(sql)
 
+
+	def update_consulta(self,dado,condicao):
+		#modificado
+		kwargs={}
+		kwargs['nome_permissionario'] = dado
+
+		values=[x for x in kwargs.values()]
+		columns=[x for x in kwargs.keys()]
+		
+		
+		self.where( condicao[0] ,"ilha_coluna","=")
+		
+		self.where_combining("AND")
+		
+		self.where( condicao[1] ,"banca_numero","=")
+
+		self.where_combining("AND")
+		
+		self.where( condicao[2] ,"nome_permissionario","=")
+		
+		sql = self.setup("dados",values,columns)
+		#print(sql)
+		self.insert(sql)
+
 	def list_all(self):
 		#modificado
 		self.select('*')
@@ -120,15 +144,16 @@ class Model(Donaclotilde):
 		sql = self.get()
 		data = self.result_list(sql)
 		return data
-	def consulta(self,ilha,banca,area):
+	def consulta(self,ilha,banca):
+		#terminar
 
 		self.select('nome_permissionario')
 		self.from_table("dados")
-		self.where(ilha,"ilha_coluna")
+		self.where(ilha,"ilha_coluna","=")
 		self.where_combining("AND")
-		self.where(banca,"banca_numero")
-		self.where_combining("AND")
-		self.where(banca,"area_banca")
+		self.where(banca,"banca_numero","=")
+		#self.where_combining("AND")
+		#self.where(banca,"area_banca","=")
 
 		sql = self.get()
 		data = self.result_list(sql)

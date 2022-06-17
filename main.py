@@ -100,7 +100,7 @@ class Carregar(Screen):
     
 
     def file_manager_open(self):
-        self.file_manager.show('../')  # output manager to the screen
+        self.file_manager.show('./')  # output manager to the screen
         self.manager_open = True
 
     def select_path(self, path):
@@ -132,23 +132,27 @@ class Carregar(Screen):
 
                 
                 lista=[''.join(x).split(';') for x in reader]
-                n = 0
+                lista.pop(0)
+                alteracoes = []
                 print(len(lista))
                 
                 #terminar ainda não funciona
 
                 for x in lista:
-                    asd = self.mad.consulta(x[6],x[7],x[4])
-                    if asd == []:
-                        asd = ['nome_permissionario']
-                    if asd[0] == x[14]:
+
+                    asd = self.mad.consulta(x[6],x[7])
+                    
+                    if x[14] == '':
+                        x[14] = None
+
+
+                    if asd[0] == [x[14]]:
                         pass
                     else:
-                        n = n +1
-                        print(asd[0])
-                        print("lista "+str(x[14]))
 
-            toast("total de atualizações: " + str(n))    
+                        self.mad.update_consulta(x[14],[x[6],x[7],asd[0][0]])
+                        
+    
         
     
     pass 
