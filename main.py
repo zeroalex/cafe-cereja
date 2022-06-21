@@ -7,6 +7,9 @@ from kivy.graphics import Color
 
 from kivy.lang import Builder
 
+from kivy.properties import StringProperty
+
+
 from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
@@ -16,13 +19,15 @@ from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFillRoundFlatButton
 from kivymd.uix.filemanager import MDFileManager
-from kivymd.uix.list import TwoLineAvatarListItem, OneLineListItem, MDList
+from kivymd.uix.list import TwoLineAvatarListItem, OneLineListItem, MDList, ImageLeftWidget
 from kivymd.uix.screen import Screen 
 
 
 
 
 import csv
+
+
 
 
 
@@ -169,14 +174,44 @@ class Busca(Screen):
         super(Busca, self).__init__(**kwargs)
         self.mad = Model()
     
-    def carregar(self,root,busca):
+    def carregar_inicio(self,root,busca):
+        self.busca = busca
+        self.contagem = self.mad.lista_empresas_filt_count(busca)
+        self.limite= 7
+        self.indice= 0
+        self.mostrando = self.limite + self.indice if self.contagem[0][0] > self.limite + self.indice else self.contagem[0][0]
 
-        self.dados = self.mad.lista_empresas_filt(busca)
+
+        root.clear_widgets()
+        print(self.contagem)
+        self.dados = self.mad.lista_empresas_filt_limite(busca,self.limite,self.indice)
         
         for x in self.dados:
             root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
                 secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2])))
-     
+
+        root.add_widget(Ultimo_item_lista(text="Exibindo: "+ str(self.mostrando),
+            secondary_text='Clique para carregar mais: '
+            ))
+
+    def carregar_final(self,root, remove):
+
+        root.remove_widget(remove)
+        self.indice +=self.limite
+        self.dados = self.mad.lista_empresas_filt_limite(self.busca,self.limite,self.indice)
+        self.mostrando = self.limite + self.indice if self.contagem[0][0] > self.limite + self.indice else self.contagem[0][0]
+
+        for x in self.dados:
+            root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
+                secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2])))
+
+        root.add_widget(Ultimo_item_lista(text="Exibindo: "+ str(self.mostrando),
+            secondary_text='Clique para carregar mais: '
+            ))
+
+
+
+        pass
 
 
 
@@ -188,6 +223,8 @@ class Scroll_lista_empresas(ScrollView):
     
     pass
 
+class Ultimo_item_lista(TwoLineAvatarListItem):
+    pass
 
 
 

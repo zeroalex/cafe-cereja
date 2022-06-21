@@ -3,12 +3,12 @@
 #inicial chamando o sceenmanager e as screens
 <Opcao>
 
-    Menu:
-        name:'menu'
-    Tela_Mapa:
-        name:'mapa'
-    Carregar:
-        name:'carregar' 
+    #Menu:
+    #    name:'menu'
+    #Tela_Mapa:
+    #    name:'mapa'
+    #Carregar:
+    #    name:'carregar' 
     Busca:
         name:'busca'  
  
@@ -120,19 +120,19 @@
             size_hint_y: .1
             size_hint_x: .8
             pos_hint: {"center_x": .5, "center_y": .1}
-            MDTextFieldRect:
+                
+            MDTextField:
                 id:entrada_busca
-                size_hint_y: .8
-                hint_text: "Buscar"
+                pos_hint: {"center_x": .5, "center_y": .3}
+                hint_text: "digite sua busca"
                 mode: "fill"
                 
-                    
-            MDRectangleFlatButton:
-                text:'Buscar'
-                md_bg_color: app.theme_cls.primary_color
-                size_hint_y: .8
-
-                on_release: self.parent.parent.parent.carregar(lista_empresas,entrada_busca.text)
+                
+            MDFloatingActionButton:
+                icon:"arrow-right"
+                #size_hint_y: 1                
+                pos_hint: {"center_x": .5, "center_y": .3}
+                on_release: self.parent.parent.parent.carregar_inicio(lista_empresas,entrada_busca.text)
 
 
         Scroll_lista_empresas:
@@ -152,6 +152,10 @@
 
 #trechos usados para construir as telas 
 
+
+
+
+
 #tela do mapa
 
 
@@ -161,4 +165,8 @@
 <Lista_empresas>
     pos_hint: {"center_x": .1, "center_y": .9}  
       
+<Ultimo_item_lista>
+    on_release: self.parent.parent.parent.parent.carregar_final(self.parent,self)    
+    IconLeftWidget:
+        icon: "arrow-down"
 
