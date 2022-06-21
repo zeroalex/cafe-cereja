@@ -105,7 +105,7 @@ class Carregar(Screen):
     
 
     def file_manager_open(self):
-        self.file_manager.show('./')  # output manager to the screen
+        self.file_manager.show('/')  # output manager to the screen
         self.manager_open = True
 
     def select_path(self, path):
@@ -190,7 +190,7 @@ class Busca(Screen):
             root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
                 secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2])))
 
-        root.add_widget(Ultimo_item_lista(text="Exibindo: "+ str(self.mostrando),
+        root.add_widget(Ultimo_item_lista(text="Exibindo: "+ str(self.mostrando)+" de total "+str(self.contagem[0][0]),
             secondary_text='Clique para carregar mais: '
             ))
 
@@ -205,7 +205,7 @@ class Busca(Screen):
             root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
                 secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2])))
 
-        root.add_widget(Ultimo_item_lista(text="Exibindo: "+ str(self.mostrando),
+        root.add_widget(Ultimo_item_lista(text="Exibindo: " + str(self.mostrando)+" de total "+str(self.contagem[0][0]),
             secondary_text='Clique para carregar mais: '
             ))
 
