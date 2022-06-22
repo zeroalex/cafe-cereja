@@ -56,15 +56,30 @@ class Tela_canvas(Widget):
         mad = Model()
         self.lista = mad.listar_cordenadas()
 
+        
+
         with self.canvas:
 
+            print(self.pos)
+            print(self.size)
+            print(self.center_x)
+            print(self.size_hint_max)
+            print(self.size_hint_max_x)
+            print(self.size_hint_max_y)
+            print(self.size_hint_min)
+            print(self.size_hint_min_x)
+            print(self.size_hint_min_y)
+            print(self.size_hint_x)
+            print(self.size_hint_y)
             #padronizar para usar as coordenadas corretas em qualquer tela
             #desenhar asreas do varejão
             #Color(0,1,1,1 , mode='rgba')
             #self.rect = Rectangle(pos=(0,0),size=( 400 ,510))
 
-
             Color(0,0,1,0.5 , mode='rgba')
+            
+            self.rect = Rectangle(pos = (200,200))
+
             for x in self.lista:    
                 self.rect = Rectangle(pos = (10 if x[1] == None  else x[1] 
                     ,10 if x[2] == None else x[2] ), size=(10,10) )
@@ -83,19 +98,38 @@ class Tela_canvas(Widget):
 class Tela_Mapa(Screen):
     def __init__(self, **kwargs):
         super(Tela_Mapa, self).__init__(**kwargs)
-        self.destaque = None
+        self.dest_empresa = None
+        self.dest_ilha_coluna = None
+        self.dest_banca_numero = None
+
 
     def seleciona_empresa(self,item,root):
-        print(item.text)
-        print(item.secondary_text)
+        self.dest_empresa = item.text
+        area = item.secondary_text.replace('Banca','').replace("Local",'').split(":")
+
+        self.dest_ilha_coluna = area[1].strip()
+        self.dest_banca_numero = area[2].strip()
+
+
+        print(self.dest_banca_numero)
+        print(self.dest_ilha_coluna)
+        print(self.dest_empresa)
         
         root.current="mapa"
         
-        #self.ids.telamapa.lista
+        #print(self.ids.telamapa.lista)
         self.ids.telamapa.canvas.clear()
+
+        Color(0,0,1,0.5 , mode='rgba')
+            
+
         with self.ids.telamapa.canvas:
             Color(1,0,0,1 , mode='rgba')
-            self.rect = Rectangle(pos = (200,200),size=( 100 ,100))
+            
+            for x in self.ids.telamapa.lista:
+                Color(1,0,0,1 , mode='rgba') if x[0]==self.dest_empresa else Color(0,0,1,0.5 , mode='rgba')
+                self.rect = Rectangle(pos = (10 if x[1] == None  else x[1] 
+                    ,10 if x[2] == None else x[2] ), size=(10,10) )
     pass 
 
 
@@ -200,7 +234,7 @@ class Busca(Screen):
         
         for x in self.dados:
             root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
-                secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2]),on_release=lambda x: self.parent.get_screen('mapa').seleciona_empresa(x,self.parent) ))
+                secondary_text='Local: ' +str(x[1])+" Banca: "+str(x[2]),on_release=lambda x: self.parent.get_screen('mapa').seleciona_empresa(x,self.parent) ))
 
         root.add_widget(Ultimo_item_lista(text="Exibindo: "+ str(self.mostrando)+" de total "+str(self.contagem[0][0]),
             secondary_text='Clique para carregar mais: '
@@ -215,7 +249,7 @@ class Busca(Screen):
 
         for x in self.dados:
             root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
-                secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2]),on_release=lambda x: self.parent.get_screen('mapa').seleciona_empresa(x,self.parent) ))
+                secondary_text='Local: ' +str(x[1])+" Banca: "+str(x[2]),on_release=lambda x: self.parent.get_screen('mapa').seleciona_empresa(x,self.parent) ))
 
         root.add_widget(Ultimo_item_lista(text="Exibindo: " + str(self.mostrando)+" de total "+str(self.contagem[0][0]),
             secondary_text='Clique para carregar mais: '

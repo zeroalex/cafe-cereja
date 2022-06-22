@@ -94,16 +94,14 @@
             title: "Mapa Do Varejão Noturno"
             left_action_items: [["arrow-left", lambda x: app.root.menu_carregar()]]
             right_action_items: [["menu", lambda x: app.root.busca_carregar()]]
-    
-        BoxLayout:
-            orientation:'horizontal'
-    
-
-            FloatLayout:
+        
             
-                Tela_canvas:
-                    id:telamapa
-                    size_hint_x: .5
+        Tela_canvas:
+            
+            id:telamapa
+        MDToolbar:
+            size_hint_y: .1
+            title: "Mapa Do Varejão Noturno"
 
                 
 # Screen da busca
