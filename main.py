@@ -22,9 +22,6 @@ from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import TwoLineAvatarListItem, OneLineListItem, MDList, ImageLeftWidget
 from kivymd.uix.screen import Screen 
 
-
-
-
 import csv
 
 
@@ -84,7 +81,21 @@ class Tela_canvas(Widget):
     pass
 
 class Tela_Mapa(Screen):
+    def __init__(self, **kwargs):
+        super(Tela_Mapa, self).__init__(**kwargs)
+        self.destaque = None
 
+    def seleciona_empresa(self,item,root):
+        print(item.text)
+        print(item.secondary_text)
+        
+        root.current="mapa"
+        
+        #self.ids.telamapa.lista
+        self.ids.telamapa.canvas.clear()
+        with self.ids.telamapa.canvas:
+            Color(1,0,0,1 , mode='rgba')
+            self.rect = Rectangle(pos = (200,200),size=( 100 ,100))
     pass 
 
 
@@ -105,7 +116,8 @@ class Carregar(Screen):
     
 
     def file_manager_open(self):
-        self.file_manager.show('/')  # output manager to the screen
+        home = MDApp.get_running_app().user_data_dir+'/'
+        self.file_manager.show(home)  # output manager to the screen
         self.manager_open = True
 
     def select_path(self, path):
@@ -188,7 +200,7 @@ class Busca(Screen):
         
         for x in self.dados:
             root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
-                secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2])))
+                secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2]),on_release=lambda x: self.parent.get_screen('mapa').seleciona_empresa(x,self.parent) ))
 
         root.add_widget(Ultimo_item_lista(text="Exibindo: "+ str(self.mostrando)+" de total "+str(self.contagem[0][0]),
             secondary_text='Clique para carregar mais: '
@@ -203,7 +215,7 @@ class Busca(Screen):
 
         for x in self.dados:
             root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
-                secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2])))
+                secondary_text='Local: ' +str(x[1])+" - Banca: "+str(x[2]),on_release=lambda x: self.parent.get_screen('mapa').seleciona_empresa(x,self.parent) ))
 
         root.add_widget(Ultimo_item_lista(text="Exibindo: " + str(self.mostrando)+" de total "+str(self.contagem[0][0]),
             secondary_text='Clique para carregar mais: '
