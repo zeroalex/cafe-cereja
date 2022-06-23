@@ -2,8 +2,7 @@ from donaclotilde.model import Model
 
 
 from kivy.core.window import Window
-from kivy.graphics import Rectangle
-from kivy.graphics import Color
+from kivy.graphics import Rectangle, Line, Color
 
 from kivy.lang import Builder
 
@@ -19,7 +18,7 @@ from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFillRoundFlatButton
 from kivymd.uix.filemanager import MDFileManager
-from kivymd.uix.list import TwoLineAvatarListItem, OneLineListItem, MDList, ImageLeftWidget
+from kivymd.uix.list import TwoLineListItem, OneLineListItem, MDList, ImageLeftWidget
 from kivymd.uix.screen import Screen 
 
 import csv
@@ -55,30 +54,20 @@ class Tela_canvas(Widget):
 
         mad = Model()
         self.lista = mad.listar_cordenadas()
+        self.cordx = None
+        self.cordy = None
 
-        
+        self.edite = False
 
         with self.canvas:
 
-            print(self.pos)
-            print(self.size)
-            print(self.center_x)
-            print(self.size_hint_max)
-            print(self.size_hint_max_x)
-            print(self.size_hint_max_y)
-            print(self.size_hint_min)
-            print(self.size_hint_min_x)
-            print(self.size_hint_min_y)
-            print(self.size_hint_x)
-            print(self.size_hint_y)
             #padronizar para usar as coordenadas corretas em qualquer tela
             #desenhar asreas do varejão
             #Color(0,1,1,1 , mode='rgba')
             #self.rect = Rectangle(pos=(0,0),size=( 400 ,510))
-
-            Color(0,0,1,0.5 , mode='rgba')
+            Tela_Mapa.marcacao(self)
             
-            self.rect = Rectangle(pos = (200,200))
+            Color(0,0,1,0.5 , mode='rgba')
 
             for x in self.lista:    
                 self.rect = Rectangle(pos = (10 if x[1] == None  else x[1] 
@@ -86,8 +75,15 @@ class Tela_canvas(Widget):
 
     def on_touch_down(self, touch):
         
-        print(int(touch.pos[0]))
-        print(int(touch.pos[1]))
+        self.cordx = int(touch.pos[0])
+        self.cordy = int(touch.pos[1])
+        
+        if self.edite:
+            print(int(touch.pos[0]))
+            print(int(touch.pos[1]))
+            self.edite = False
+        else:
+            print("falha")
 
     def buscar(self):
         print("asdasdasdasd")
@@ -101,6 +97,39 @@ class Tela_Mapa(Screen):
         self.dest_empresa = None
         self.dest_ilha_coluna = None
         self.dest_banca_numero = None
+        
+
+    def editar(self):
+        self.ids.telamapa.edite = True
+
+        print(self.dest_empresa)
+
+
+    def marcacao(self):
+
+        Color(.4,.4,.4,1 , mode='rgba')
+
+        self.line = Line(points=(0,100,1600,100), size=(4))
+        self.line = Line(points=(0,500,1600,500), size=(4))
+
+
+        Color(0,0,1,0.1 , mode='rgba')
+            
+        self.rect = Rectangle(pos = (50,100), size=(150,400))
+        Color(0,1,0,0.1 , mode='rgba')
+            
+        self.rect = Rectangle(pos = (200,100), size=(400,100))
+
+        Color(1,0,0,0.1 , mode='rgba')
+            
+        self.rect = Rectangle(pos = (200,200), size=(400,100))
+
+        Color(1,1,0,0.1 , mode='rgba')
+            
+        self.rect = Rectangle(pos = (200,300), size=(400,100))
+        Color(0,1,1,0.1 , mode='rgba')
+            
+        self.rect = Rectangle(pos = (200,400), size=(400,100))
 
 
     def seleciona_empresa(self,item,root):
@@ -115,15 +144,21 @@ class Tela_Mapa(Screen):
         print(self.dest_ilha_coluna)
         print(self.dest_empresa)
         
+
+        self.ids.legenda.title = self.dest_empresa
+        self.ids.legenda.add_widget(ImageLeftWidget( ))
+
         root.current="mapa"
         
         #print(self.ids.telamapa.lista)
         self.ids.telamapa.canvas.clear()
 
-        Color(0,0,1,0.5 , mode='rgba')
+
+        
             
 
         with self.ids.telamapa.canvas:
+            self.marcacao()
             Color(1,0,0,1 , mode='rgba')
             
             for x in self.ids.telamapa.lista:
@@ -229,11 +264,12 @@ class Busca(Screen):
 
 
         root.clear_widgets()
+
         print(self.contagem)
         self.dados = self.mad.lista_empresas_filt_limite(busca,self.limite,self.indice)
         
         for x in self.dados:
-            root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
+            root.add_widget(TwoLineListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
                 secondary_text='Local: ' +str(x[1])+" Banca: "+str(x[2]),on_release=lambda x: self.parent.get_screen('mapa').seleciona_empresa(x,self.parent) ))
 
         root.add_widget(Ultimo_item_lista(text="Exibindo: "+ str(self.mostrando)+" de total "+str(self.contagem[0][0]),
@@ -248,7 +284,7 @@ class Busca(Screen):
         self.mostrando = self.limite + self.indice if self.contagem[0][0] > self.limite + self.indice else self.contagem[0][0]
 
         for x in self.dados:
-            root.add_widget(TwoLineAvatarListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
+            root.add_widget(TwoLineListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
                 secondary_text='Local: ' +str(x[1])+" Banca: "+str(x[2]),on_release=lambda x: self.parent.get_screen('mapa').seleciona_empresa(x,self.parent) ))
 
         root.add_widget(Ultimo_item_lista(text="Exibindo: " + str(self.mostrando)+" de total "+str(self.contagem[0][0]),
@@ -269,7 +305,7 @@ class Scroll_lista_empresas(ScrollView):
     
     pass
 
-class Ultimo_item_lista(TwoLineAvatarListItem):
+class Ultimo_item_lista(TwoLineListItem):
     pass
 
 
