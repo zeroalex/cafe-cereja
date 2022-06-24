@@ -21,7 +21,7 @@ from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import TwoLineListItem, OneLineListItem, MDList, ImageLeftWidget
 from kivymd.uix.screen import Screen 
 
-import csv
+import csv,math
 
 
 
@@ -62,10 +62,24 @@ class Tela_canvas(Widget):
 
         with self.canvas:
 
-            #padronizar para usar as coordenadas corretas em qualquer tela
-            #desenhar asreas do varejão
-            #Color(0,1,1,1 , mode='rgba')
-            #self.rect = Rectangle(pos=(0,0),size=( 400 ,510))
+            Tela_Mapa.marcacao(self)
+            
+            Color(0,0,1,0.5 , mode='rgba')
+
+            for x in self.lista:    
+                self.rect = Rectangle(pos = (10 if x[1] == None  else x[1] 
+                    ,10 if x[2] == None else x[2] ), size=(10,10) )
+
+    def carregar_mapa(self):
+        self.lista = self.mad.listar_cordenadas()
+        self.dest_empresa = None
+        self.dest_ilha_coluna = None
+        self.dest_banca_numero = None
+
+        self.edite = False
+        self.canvas.clear()
+        with self.canvas:
+
             Tela_Mapa.marcacao(self)
             
             Color(0,0,1,0.5 , mode='rgba')
@@ -80,8 +94,8 @@ class Tela_canvas(Widget):
         #colocar função para consultar empresa com clique
 
         if self.edite:
-            print(int(touch.pos[0]))
-            print(int(touch.pos[1]))
+            print(math.ceil(int(touch.pos[0])))
+            print(math.ceil(int(touch.pos[1])))
             print(self.dest_empresa)
             print(self.dest_ilha_coluna)
             print(self.dest_banca_numero)
@@ -89,7 +103,8 @@ class Tela_canvas(Widget):
             condicao = [self.dest_ilha_coluna,self.dest_banca_numero,self.dest_empresa]
 
             self.mad.update_cordenada(str(int(touch.pos[0])),str(int(touch.pos[1])),condicao)
-            #Tela_Mapa.marcacao(self)
+            #passar parametro empresa
+            self.carregar_mapa()
             self.edite = False
 
         else:
@@ -153,18 +168,21 @@ class Tela_Mapa(Screen):
 
 
     def seleciona_empresa(self,item,root):
+    
         self.dest_empresa = item.text
         area = item.secondary_text.replace('Banca','').replace("Local",'').split(":")
 
         self.dest_ilha_coluna = area[1].strip()
         self.dest_banca_numero = area[2].strip()
-
+        """
         print(self.dest_banca_numero)
         print(self.dest_ilha_coluna)
         print(self.dest_empresa)
-        
-        self.ids.legenda.title = self.dest_empresa
+        """
 
+        self.ids.legenda.title = self.dest_empresa
+    
+        
         root.current="mapa"
         
         #print(self.ids.telamapa.lista)
@@ -182,7 +200,8 @@ class Tela_Mapa(Screen):
                 Color(1,0,0,1 , mode='rgba') if x[0]==self.dest_empresa else Color(0,0,1,0.5 , mode='rgba')
                 self.rect = Rectangle(pos = (10 if x[1] == None  else x[1] 
                     ,10 if x[2] == None else x[2] ), size=(10,10) )
-    pass 
+
+    
 
 
 

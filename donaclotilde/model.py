@@ -102,13 +102,13 @@ class Model(Donaclotilde):
 		
 		self.where( condicao[1] ,"banca_numero","=")
 
-		self.where_combining("AND")
 		
-		self.where( condicao[2] ,"nome_permissionario","=")
 		
 		sql = self.setup("dados",values,columns)
 		#print(sql)
-		#self.insert(sql)
+		self.insert(sql)
+
+		
 	def update_consulta(self,dado,condicao):
 		#modificado
 		kwargs={}
