@@ -94,15 +94,22 @@ class Tela_canvas(Widget):
         #colocar função para consultar empresa com clique
 
         if self.edite:
-            print(math.ceil(int(touch.pos[0])))
-            print(math.ceil(int(touch.pos[1])))
+            x = int(touch.pos[0])
+            while x%10 != 0:
+                x = x-1    
+
+            
+            y = int(touch.pos[1])
+            while y%10 != 0:
+                y = y-1
+
             print(self.dest_empresa)
             print(self.dest_ilha_coluna)
             print(self.dest_banca_numero)
             
             condicao = [self.dest_ilha_coluna,self.dest_banca_numero,self.dest_empresa]
 
-            self.mad.update_cordenada(str(int(touch.pos[0])),str(int(touch.pos[1])),condicao)
+            self.mad.update_cordenada(str(x),str(y),condicao)
             #passar parametro empresa
             self.carregar_mapa()
             self.edite = False
@@ -221,8 +228,8 @@ class Carregar(Screen):
     
 
     def file_manager_open(self):
-        #home = MDApp.get_running_app().user_data_dir+'/'
-        home = "./"
+        home = MDApp.get_running_app().user_data_dir+'/'
+        #home = "./"
         self.file_manager.show(home)  # output manager to the screen
         self.manager_open = True
 
