@@ -52,10 +52,11 @@ class Tela_canvas(Widget):
     def __init__(self, **kwargs):
         super(Tela_canvas, self).__init__(**kwargs)
 
-        mad = Model()
-        self.lista = mad.listar_cordenadas()
-        self.cordx = None
-        self.cordy = None
+        self.mad = Model()
+        self.lista = self.mad.listar_cordenadas()
+        self.dest_empresa = None
+        self.dest_ilha_coluna = None
+        self.dest_banca_numero = None
 
         self.edite = False
 
@@ -75,14 +76,26 @@ class Tela_canvas(Widget):
 
     def on_touch_down(self, touch):
         
-        self.cordx = int(touch.pos[0])
-        self.cordy = int(touch.pos[1])
         
+        #colocar função para consultar empresa com clique
+
         if self.edite:
             print(int(touch.pos[0]))
             print(int(touch.pos[1]))
+            print(self.dest_empresa)
+            print(self.dest_ilha_coluna)
+            print(self.dest_banca_numero)
+            
+            condicao = [self.dest_ilha_coluna,self.dest_banca_numero,self.dest_empresa]
+
+            self.mad.update_cordenada(str(int(touch.pos[0])),str(int(touch.pos[1])),condicao)
+            #Tela_Mapa.marcacao(self)
             self.edite = False
+
         else:
+
+            Tela_Mapa.procura(self)
+            #colocar função para consultar empresa com clique
             print("falha")
 
     def buscar(self):
@@ -97,11 +110,18 @@ class Tela_Mapa(Screen):
         self.dest_empresa = None
         self.dest_ilha_coluna = None
         self.dest_banca_numero = None
-        
+
+
+    def procura(self):
+        print("dsdasda")
 
     def editar(self):
-        self.ids.telamapa.edite = True
-
+        if self.dest_empresa:
+            self.ids.telamapa.edite = True
+            self.ids.telamapa.dest_empresa=self.dest_empresa
+            self.ids.telamapa.dest_ilha_coluna=self.dest_ilha_coluna
+            self.ids.telamapa.dest_banca_numero=self.dest_banca_numero
+        
         print(self.dest_empresa)
 
 
@@ -139,14 +159,11 @@ class Tela_Mapa(Screen):
         self.dest_ilha_coluna = area[1].strip()
         self.dest_banca_numero = area[2].strip()
 
-
         print(self.dest_banca_numero)
         print(self.dest_ilha_coluna)
         print(self.dest_empresa)
         
-
         self.ids.legenda.title = self.dest_empresa
-        self.ids.legenda.add_widget(ImageLeftWidget( ))
 
         root.current="mapa"
         
@@ -185,7 +202,8 @@ class Carregar(Screen):
     
 
     def file_manager_open(self):
-        home = MDApp.get_running_app().user_data_dir+'/'
+        #home = MDApp.get_running_app().user_data_dir+'/'
+        home = "./"
         self.file_manager.show(home)  # output manager to the screen
         self.manager_open = True
 

@@ -86,7 +86,29 @@ class Model(Donaclotilde):
 		#print(sql)
 		self.insert(sql)
 
+	def update_cordenada(self,x,y,condicao):
+		#modificado
+		kwargs={}
+		kwargs['cordenada_x'] = x
+		kwargs['cordenada_y'] = y
 
+		values=[x for x in kwargs.values()]
+		columns=[x for x in kwargs.keys()]
+		
+		
+		self.where( condicao[0] ,"ilha_coluna","=")
+		
+		self.where_combining("AND")
+		
+		self.where( condicao[1] ,"banca_numero","=")
+
+		self.where_combining("AND")
+		
+		self.where( condicao[2] ,"nome_permissionario","=")
+		
+		sql = self.setup("dados",values,columns)
+		#print(sql)
+		#self.insert(sql)
 	def update_consulta(self,dado,condicao):
 		#modificado
 		kwargs={}
