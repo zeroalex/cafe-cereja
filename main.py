@@ -23,17 +23,13 @@ from kivymd.uix.screen import Screen
 
 import csv,math
 
-
-
-
+#rodar como celular
+# -m screen:onesv,portrait
 
 class Opcao(ScreenManager):
     def __init__(self, **kwargs):
         super(Opcao, self).__init__(**kwargs)
-        
-
         self.mad = Model()
-        
             
     def menu_carregar(self):
         self.transition.direction = 'right'
@@ -60,6 +56,10 @@ class Tela_canvas(Widget):
 
         self.edite = False
 
+        self.carregar_mapa()
+    def carregar_mapa(self):
+        self.lista = self.mad.listar_cordenadas()
+        self.canvas.clear()
         with self.canvas:
 
             Tela_Mapa.marcacao(self)
@@ -67,6 +67,98 @@ class Tela_canvas(Widget):
             Color(0,0,1,0.5 , mode='rgba')
 
             for x in self.lista:    
+                Color(1,0,0,1 , mode='rgba') if x[0]==self.dest_empresa else Color(0,0,1,0.5 , mode='rgba')
+
+                self.rect = Rectangle(pos = (10 if x[1] == None  else x[1] 
+                    ,10 if x[2] == None else x[2] ), size=(10,10) )
+
+    def on_touch_down(self, touch):
+        
+        
+        #colocar função para consultar empresa com clique
+
+        
+        if self.edite:
+            x = int(touch.pos[0])
+            while x%10 != 0:
+                x = x-1    
+
+            
+            y = int(touch.pos[1])
+            while y%10 != 0:
+                y = y-1
+
+            
+            condicao = [self.dest_ilha_coluna,self.dest_banca_numero,self.dest_empresa]
+            print("editando "+str(self.dest_empresa))
+            
+            self.mad.update_cordenada(str(x),str(y),condicao)
+            #passar parametro empresa
+            self.carregar_mapa()
+            self.dest_empresa = None
+            self.dest_ilha_coluna = None
+            self.dest_banca_numero = None
+
+            self.edite = False
+
+        else:
+
+            
+            x = int(touch.pos[0])
+            while x%10 != 0:
+                x = x-1    
+            
+            y = int(touch.pos[1])
+            while y%10 != 0:
+                y = y-1
+            self.procura(x,y)
+
+            
+
+
+            #self.carregar_mapa()
+
+            #colocar função para consultar empresa com clique
+            #print("falha")
+        self.carregar_mapa()
+
+    
+    def procura(self,x,y):
+        data = self.mad.procura_cordenada(str(x),str(y))
+        if data != []:
+            self.dest_empresa = data[0][0]
+            self.dest_ilha_coluna = data[0][1]
+            self.dest_banca_numero = data[0][2]
+
+            Tela_Mapa.muda_legenda(self,data[0][0]  )
+        else:
+            Tela_Mapa.muda_legenda(self,None  )
+
+            
+
+    pass
+"""
+class Tela_canvas2(Widget):
+    def __init__(self, **kwargs):
+        super(Tela_canvas, self).__init__(**kwargs)
+
+        self.mad = Model()
+        self.lista = self.mad.listar_cordenadas()
+        self.dest_empresa = None
+        self.dest_ilha_coluna = None
+        self.dest_banca_numero = None
+
+        self.edite = False
+
+        with self.canvas:
+
+            Tela_Mapa.marcacao(self)
+            
+            Color(0,0,1,0.5 , mode='rgba')
+
+            for x in self.lista:    
+                Color(1,0,0,1 , mode='rgba') if x[0]==self.dest_empresa else Color(0,0,1,0.5 , mode='rgba')
+
                 self.rect = Rectangle(pos = (10 if x[1] == None  else x[1] 
                     ,10 if x[2] == None else x[2] ), size=(10,10) )
 
@@ -85,6 +177,8 @@ class Tela_canvas(Widget):
             Color(0,0,1,0.5 , mode='rgba')
 
             for x in self.lista:    
+                Color(1,0,0,1 , mode='rgba') if x[0]==self.dest_empresa else Color(0,0,1,0.5 , mode='rgba')
+
                 self.rect = Rectangle(pos = (10 if x[1] == None  else x[1] 
                     ,10 if x[2] == None else x[2] ), size=(10,10) )
 
@@ -93,6 +187,7 @@ class Tela_canvas(Widget):
         
         #colocar função para consultar empresa com clique
 
+        
         if self.edite:
             x = int(touch.pos[0])
             while x%10 != 0:
@@ -103,9 +198,6 @@ class Tela_canvas(Widget):
             while y%10 != 0:
                 y = y-1
 
-            print(self.dest_empresa)
-            print(self.dest_ilha_coluna)
-            print(self.dest_banca_numero)
             
             condicao = [self.dest_ilha_coluna,self.dest_banca_numero,self.dest_empresa]
 
@@ -116,16 +208,40 @@ class Tela_canvas(Widget):
 
         else:
 
-            Tela_Mapa.procura(self)
-            #colocar função para consultar empresa com clique
-            print("falha")
+            
+            x = int(touch.pos[0])
+            while x%10 != 0:
+                x = x-1    
+            
+            y = int(touch.pos[1])
+            while y%10 != 0:
+                y = y-1
+            self.procura(x,y)
 
-    def buscar(self):
-        print("asdasdasdasd")
-        
+            
+
+
+            #self.carregar_mapa()
+
+            #colocar função para consultar empresa com clique
+            #print("falha")
+
+    
+    def procura(self,x,y):
+        data = self.mad.procura_cordenada(str(x),str(y))
+        if data != []:
+            self.dest_empresa = data[0][0]
+            self.dest_ilha_coluna = data[0][1]
+            self.dest_banca_numero = data[0][2]
+
+            Tela_Mapa.muda_legenda(self,data[0][0]  )
+        else:
+            Tela_Mapa.muda_legenda(self,None  )
+
+            
 
     pass
-
+"""
 class Tela_Mapa(Screen):
     def __init__(self, **kwargs):
         super(Tela_Mapa, self).__init__(**kwargs)
@@ -133,16 +249,19 @@ class Tela_Mapa(Screen):
         self.dest_ilha_coluna = None
         self.dest_banca_numero = None
 
+    def muda_legenda(self,nome):
+        print('chegeui')
+        print(nome)
+        if nome:
+            self.parent.parent.ids.legenda.title=nome
+        else:
+            self.parent.parent.ids.legenda.title="-"
 
-    def procura(self):
-        print("dsdasda")
+        pass
 
     def editar(self):
-        if self.dest_empresa:
-            self.ids.telamapa.edite = True
-            self.ids.telamapa.dest_empresa=self.dest_empresa
-            self.ids.telamapa.dest_ilha_coluna=self.dest_ilha_coluna
-            self.ids.telamapa.dest_banca_numero=self.dest_banca_numero
+        
+        self.ids.telamapa.edite = True
         
         print(self.dest_empresa)
 
@@ -291,9 +410,6 @@ class Menu(Screen):
 
 
 
-
-
-
 class Busca(Screen):
     def __init__(self, **kwargs):
         super(Busca, self).__init__(**kwargs)
@@ -365,17 +481,9 @@ class CafeCereja_App(MDApp):
     def build(self):
         self.theme_cls.primary_palette = "Purple" #, "Red"
         self.theme_cls.primary_hue = "800"  # "500"
-        
 
         return Opcao()
 
-    def carregar_lista_SGE(self):
-        
-        pass
-
-    
-    def anterior_fase(self):
-        print("asd")
        
 
 

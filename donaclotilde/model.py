@@ -189,6 +189,27 @@ class Model(Donaclotilde):
 		data = self.result_list(sql)
 		return data
 
+	def procura_cordenada(self, x,y):
+
+		self.select('nome_permissionario')
+		self.select('ilha_coluna')
+		self.select('banca_numero')
+		self.select('cordenada_x')
+		self.select('cordenada_y')
+
+		
+		self.from_table("dados")
+
+
+		self.where(x,"cordenada_x","=")
+		self.where_combining("AND")
+		self.where(y,"cordenada_y","=")
+
+
+		sql = self.get()
+		data = self.result_list(sql)
+		return data
+
 	def lista_empresas_filt_count(self, busca=None):
 
 		self.count('*')
