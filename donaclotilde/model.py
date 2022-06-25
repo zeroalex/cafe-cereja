@@ -95,12 +95,14 @@ class Model(Donaclotilde):
 		values=[x for x in kwargs.values()]
 		columns=[x for x in kwargs.keys()]
 		
-		
+		"""
 		self.where( condicao[0] ,"ilha_coluna","=")
 		
 		self.where_combining("AND")
-		
+		"""
 		self.where( condicao[1] ,"banca_numero","=")
+		self.where_combining("AND")
+		self.where( condicao[3] ,"ID","=")
 
 		
 		
@@ -158,6 +160,7 @@ class Model(Donaclotilde):
 		self.select('nome_permissionario')
 		self.select('ilha_coluna')
 		self.select('banca_numero')
+		self.select('ID')
 
 		
 		self.from_table("dados")
@@ -178,6 +181,7 @@ class Model(Donaclotilde):
 		self.select('nome_permissionario')
 		self.select('ilha_coluna')
 		self.select('banca_numero')
+		self.select('ID')
 
 		
 		self.from_table("dados")
@@ -196,6 +200,7 @@ class Model(Donaclotilde):
 		self.select('banca_numero')
 		self.select('cordenada_x')
 		self.select('cordenada_y')
+		self.select('ID')
 
 		
 		self.from_table("dados")

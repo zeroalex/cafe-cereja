@@ -53,11 +53,17 @@ class Tela_canvas(Widget):
         self.dest_empresa = None
         self.dest_ilha_coluna = None
         self.dest_banca_numero = None
+        self.dest_id = None
+
 
         self.edite = False
 
         self.carregar_mapa()
     def carregar_mapa(self):
+
+        
+
+
         self.lista = self.mad.listar_cordenadas()
         self.canvas.clear()
         with self.canvas:
@@ -74,53 +80,59 @@ class Tela_canvas(Widget):
 
     def on_touch_down(self, touch):
         
-        
+       
         #colocar função para consultar empresa com clique
 
-        
-        if self.edite:
-            x = int(touch.pos[0])
-            while x%10 != 0:
-                x = x-1    
-
-            
-            y = int(touch.pos[1])
-            while y%10 != 0:
-                y = y-1
-
-            
-            condicao = [self.dest_ilha_coluna,self.dest_banca_numero,self.dest_empresa]
-            print("editando "+str(self.dest_empresa))
-            
-            self.mad.update_cordenada(str(x),str(y),condicao)
-            #passar parametro empresa
-            self.carregar_mapa()
-            self.dest_empresa = None
-            self.dest_ilha_coluna = None
-            self.dest_banca_numero = None
-
-            self.edite = False
-
+        if touch.pos[0]<50 and touch.pos[1]<50:
+            pass
         else:
 
-            
-            x = int(touch.pos[0])
-            while x%10 != 0:
-                x = x-1    
-            
-            y = int(touch.pos[1])
-            while y%10 != 0:
-                y = y-1
-            self.procura(x,y)
 
-            
+            if self.edite:
+                x = int(touch.pos[0])
+                while x%10 != 0:
+                    x = x-1    
 
+                
+                y = int(touch.pos[1])
+                while y%10 != 0:
+                    y = y-1
 
-            #self.carregar_mapa()
+                
+                condicao = [self.dest_ilha_coluna,self.dest_banca_numero,self.dest_empresa , self.dest_id ]
+                print(condicao)
+                print("editando "+str(self.dest_empresa))
+                
+                self.mad.update_cordenada(str(x),str(y),condicao)
+                #passar parametro empresa
+                self.carregar_mapa()
 
-            #colocar função para consultar empresa com clique
-            #print("falha")
-        self.carregar_mapa()
+                self.dest_empresa = None
+                self.dest_ilha_coluna = None
+                self.dest_banca_numero = None
+                self.dest_id = None
+
+                self.edite = False
+
+            else:
+
+                self.dest_empresa = None
+                self.dest_ilha_coluna = None
+                self.dest_banca_numero = None
+                self.dest_id = None
+
+                x = int(touch.pos[0])
+                while x%10 != 0:
+                    x = x-1    
+                
+                y = int(touch.pos[1])
+                while y%10 != 0:
+                    y = y-1
+                self.procura(x,y)
+
+                
+            self.carregar_mapa()
+
 
     
     def procura(self,x,y):
@@ -129,10 +141,11 @@ class Tela_canvas(Widget):
             self.dest_empresa = data[0][0]
             self.dest_ilha_coluna = data[0][1]
             self.dest_banca_numero = data[0][2]
+            self.dest_id = data[0][5]
 
             Tela_Mapa.muda_legenda(self,data[0][0]  )
         else:
-            Tela_Mapa.muda_legenda(self,None  )
+            Tela_Mapa.muda_legenda(self, None)
 
             
 
@@ -248,10 +261,10 @@ class Tela_Mapa(Screen):
         self.dest_empresa = None
         self.dest_ilha_coluna = None
         self.dest_banca_numero = None
+        self.dest_id = None
 
     def muda_legenda(self,nome):
-        print('chegeui')
-        print(nome)
+        
         if nome:
             self.parent.parent.ids.legenda.title=nome
         else:
@@ -263,7 +276,8 @@ class Tela_Mapa(Screen):
         
         self.ids.telamapa.edite = True
         
-        print(self.dest_empresa)
+        
+        
 
 
     def marcacao(self):
@@ -298,37 +312,33 @@ class Tela_Mapa(Screen):
         self.dest_empresa = item.text
         area = item.secondary_text.replace('Banca','').replace("Local",'').split(":")
 
-        self.dest_ilha_coluna = area[1].strip()
-        self.dest_banca_numero = area[2].strip()
-        """
-        print(self.dest_banca_numero)
-        print(self.dest_ilha_coluna)
-        print(self.dest_empresa)
-        """
-
+        self.dest_ilha_coluna = area[2].strip()
+        self.dest_banca_numero = area[3].strip()
+        self.dest_id = area[1].strip()
+        
+    
+        
         self.ids.legenda.title = self.dest_empresa
     
         
         root.current="mapa"
         
-        #print(self.ids.telamapa.lista)
-        self.ids.telamapa.canvas.clear()
 
+
+        #self.ids.telamapa.edite = True
+        if self.dest_empresa:
+            self.ids.telamapa.edite = True
+            self.ids.telamapa.dest_empresa=self.dest_empresa
+            self.ids.telamapa.dest_ilha_coluna=self.dest_ilha_coluna
+            self.ids.telamapa.dest_banca_numero=self.dest_banca_numero
+            self.ids.telamapa.dest_id= self.dest_id
+        
+        #print(self.ids.telamapa.lista)
+        self.ids.telamapa.carregar_mapa()
+        
 
         
             
-
-        with self.ids.telamapa.canvas:
-            self.marcacao()
-            Color(1,0,0,1 , mode='rgba')
-            
-            for x in self.ids.telamapa.lista:
-                Color(1,0,0,1 , mode='rgba') if x[0]==self.dest_empresa else Color(0,0,1,0.5 , mode='rgba')
-                self.rect = Rectangle(pos = (10 if x[1] == None  else x[1] 
-                    ,10 if x[2] == None else x[2] ), size=(10,10) )
-
-    
-
 
 
 class Carregar(Screen):
@@ -430,7 +440,7 @@ class Busca(Screen):
         
         for x in self.dados:
             root.add_widget(TwoLineListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
-                secondary_text='Local: ' +str(x[1])+" Banca: "+str(x[2]),on_release=lambda x: self.parent.get_screen('mapa').seleciona_empresa(x,self.parent) ))
+                secondary_text='ID: ' +str(x[3])+' Local: ' +str(x[1])+" Banca: "+str(x[2]),on_release=lambda a: self.parent.get_screen('mapa').seleciona_empresa(a,self.parent) ))
 
         root.add_widget(Ultimo_item_lista(text="Exibindo: "+ str(self.mostrando)+" de total "+str(self.contagem[0][0]),
             secondary_text='Clique para carregar mais: '
@@ -445,7 +455,7 @@ class Busca(Screen):
 
         for x in self.dados:
             root.add_widget(TwoLineListItem(text="Empresa: "+ "vago" if x[0] == None else x[0] ,
-                secondary_text='Local: ' +str(x[1])+" Banca: "+str(x[2]),on_release=lambda x: self.parent.get_screen('mapa').seleciona_empresa(x,self.parent) ))
+                secondary_text='ID: ' +str(x[3])+' Local: ' +str(x[1])+" Banca: "+str(x[2]),on_release=lambda a: self.parent.get_screen('mapa').seleciona_empresa(a,self.parent) ))
 
         root.add_widget(Ultimo_item_lista(text="Exibindo: " + str(self.mostrando)+" de total "+str(self.contagem[0][0]),
             secondary_text='Clique para carregar mais: '
@@ -466,6 +476,7 @@ class Scroll_lista_empresas(ScrollView):
     pass
 
 class Ultimo_item_lista(TwoLineListItem):
+
     pass
 
 
