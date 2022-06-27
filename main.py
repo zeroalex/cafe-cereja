@@ -325,9 +325,9 @@ class Tela_Mapa(Screen):
         
 
 
-        #self.ids.telamapa.edite = True
+        
         if self.dest_empresa:
-            self.ids.telamapa.edite = True
+            #self.ids.telamapa.edite = True
             self.ids.telamapa.dest_empresa=self.dest_empresa
             self.ids.telamapa.dest_ilha_coluna=self.dest_ilha_coluna
             self.ids.telamapa.dest_banca_numero=self.dest_banca_numero
